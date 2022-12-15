@@ -1,13 +1,13 @@
-/* resource "aws_docdb_cluster" "docdb" {
+ resource "aws_docdb_cluster" "docdb" {
   cluster_identifier      = "roboshop-${var.ENV}"
   engine                  = "docdb"
   master_username         = admin1
-  master_password         = local.PASSWORD
+  master_password         = roboshop1
 # True only during lab, in prod , we will take a snapshot and that time value will be false
   skip_final_snapshot     = true
   db_subnet_group_name    = aws_docdb_subnet_group.docdb.name
-  vpc_security_group_ids  = [aws_security_group.allow_docdb.id]
-} */
+  // vpc_security_group_ids  = [aws_security_group.allow_docdb.id]
+} 
 
 # Creates Subnet Group
 resource "aws_docdb_subnet_group" "docdb" {
