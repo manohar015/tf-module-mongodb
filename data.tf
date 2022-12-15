@@ -1,4 +1,4 @@
-data "terraform_remote_state" "vpc" {
+/* data "terraform_remote_state" "vpc" {
   backend = "s3"
   config = {
     bucket = "manohar-b50-tf-state-bucket"
@@ -6,4 +6,4 @@ data "terraform_remote_state" "vpc" {
     region = "us-east-1"
     
   }
-}
+} */

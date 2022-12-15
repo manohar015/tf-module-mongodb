@@ -18,3 +18,8 @@
     Name = "My docdb subnet group"
   }
 }*/
+
+output "name" {
+    value = "Hello world"
+  
+}
