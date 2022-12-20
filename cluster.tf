@@ -1,13 +1,15 @@
- resource "aws_docdb_cluster" "docdb" {
+# Creates DocDB Cluster
+resource "aws_docdb_cluster" "docdb" {
   cluster_identifier      = "roboshop-${var.ENV}"
   engine                  = "docdb"
-  master_username         = jsondecode(data.aws_secretsmanager_secret_version.secrets.secret_string)["DOCDB_USERNAME"]
-  master_password         = jsondecode(data.aws_secretsmanager_secret_version.secrets.secret_string)["DOCDB_PASSWORD"]
+  master_username         = local.USERNAME
+  master_password         = local.PASSWORD
 # True only during lab, in prod , we will take a snapshot and that time value will be false
   skip_final_snapshot     = true
   db_subnet_group_name    = aws_docdb_subnet_group.docdb.name
   vpc_security_group_ids  = [aws_security_group.allow_docdb.id]
-} 
+}
+
 
 # Creates Subnet Group
 resource "aws_docdb_subnet_group" "docdb" {
@@ -20,21 +22,22 @@ resource "aws_docdb_subnet_group" "docdb" {
 }
 
 # Creats DocDB Cluster Instances and adds them to the cluster
- resource "aws_docdb_cluster_instance" "cluster_instances" {
+resource "aws_docdb_cluster_instance" "cluster_instances" {
   count              = var.DOCDB_INSTANCE_COUNT
   identifier         = "roboshop-${var.ENV}"
   cluster_identifier = aws_docdb_cluster.docdb.id
   instance_class     = var.DOCDB_INSTANCE_CLASS
-} 
+}
 
 
+# Creates Security Group for DocumentDB
 resource "aws_security_group" "allow_docdb" {
   name        = "roboshop-docdb-${var.ENV}"
   description = "roboshop-docdb-${var.ENV}"
   vpc_id      = data.terraform_remote_state.vpc.outputs.VPC_ID
 
   ingress {
-    description      = "Allow docdb Connection From Default VPC"
+    description      = "Allow DocDB Connection From Default VPC"
     from_port        = var.DOCDB_PORT
     to_port          = var.DOCDB_PORT
     protocol         = "tcp"
@@ -42,7 +45,7 @@ resource "aws_security_group" "allow_docdb" {
   }
 
   ingress {
-    description      = "Allow docdb Connection From Private VPC"
+    description      = "Allow DocDB Connection From Private VPC"
     from_port        = var.DOCDB_PORT
     to_port          = var.DOCDB_PORT
     protocol         = "tcp"
